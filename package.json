@@ -1,17 +1,27 @@
 {
   "name": "brass-birmingham",
   "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "description": "Brass: Birmingham Game",
+  "engines": {
+    "node": ">=14.x <=16.x"
   },
+  "private": true,
   "dependencies": {
     "vue": "^3.3.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.0",
     "vite": "^4.4.11"
+  },
+  "scripts": {
+    "start": "node build/src/server/server.js",
+    "build": "npm run make:static && npm run build:server && npm run build:client",
+    "build:client": "npm run make:cards && cross-env NODE_ENV=production webpack",
+    "build:server": "tsc --build src/tsconfig.json",
+    "clean": "rm -r ./build/ ./src/genfiles/ || true",
+    "make:cards": "node build/src/server/tools/export_card_rendering.js",
+    "make:css": "lessc src/styles/common.less build/styles.css && node src/server/tools/gzip.js",
+    "make:json": "node make_static_json.js",
+    "make:static": "npm run make:css && npm run make:json"
   }
 }
